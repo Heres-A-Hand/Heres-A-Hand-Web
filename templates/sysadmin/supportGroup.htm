@@ -1,0 +1,190 @@
+{*
+Copyright 2011-2013 Here's A Hand Limited
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+
+You may obtain a copy of the License at
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*}
+
+{extends file="sysadmin/page.htm"}
+
+
+{block name="content"}
+	<h1>Group</h1>
+	
+	<h2>Details</h2>
+	
+	<table class="verticalData">
+		<tr>
+			<th>Title</th>
+			<td>{$supportGroup->getTitle()|escape}</td>
+		</tr>
+		<tr class="alternate">
+			<th>Description</th>
+			<td>{$supportGroup->getDescription()|escape}</td>
+		</tr>
+		<tr>
+			<th>Sys Admin Label</th>
+			<td>
+				<form method="post" >
+					<input type="hidden" name="CSFRToken" value="{$CSFRToken}">
+					<input type="hidden" name="action" value="changeLabel">
+					<input type="text" name="label" value="{$supportGroup->getSysAdminLabel()|escape}">
+					<input type="submit">
+				</form>
+			</td>
+		</tr>
+		<tr class="alternate">
+			<th>White Label</th>
+			<td>
+				{$whiteLabel = $supportGroup->getWhiteLabel()}
+				{if $whiteLabel}
+					<a href="/sysadmin/whiteLabel.php?id={$whiteLabel->getId()}">{$whiteLabel->getTitle()|escape}</a>
+				{else}
+					None
+				{/if}
+				<form method="post" >
+					<input type="hidden" name="CSFRToken" value="{$CSFRToken}">
+					<input type="hidden" name="action" value="changeWhiteLabel">
+					<select name="whiteLabel">
+						{while $whiteLabel = $whiteLabelSearch->nextResult()}
+							<option value="{$whiteLabel->getId()}">{$whiteLabel->getTitle()|escape}</option>
+						{/while}
+					</select>
+					<input type="submit">
+				</form>
+			</td>
+		</tr>
+		<tr>
+			<th>Created</th>
+			<td><tr class="alternate">{$supportGroup->getCreatedAt()|date_format}</td>
+		</tr>
+		<tr class="alternate">
+			{if $supportGroup->isDeleted()}
+				<th>Deleted</th>
+				<td>{$supportGroup->getDeletedAt()|date_format}</td>
+			{else}
+				<th>Delete</th>
+				<td>
+					<form method="post" onsubmit="return confirm('Are you sure???!?!?!?!?!?!?');">
+						<input type="hidden" name="CSFRToken" value="{$CSFRToken}">
+						<input type="hidden" name="action" value="delete">
+						<input type="submit" value="DELETE">
+					</form>
+				</td>
+			{/if}
+		</tr>
+		<tr>
+			<th>Premium</th>
+			<td>
+				{if $supportGroup->isPremium()}
+					Yes
+				{else}
+					No
+					<form method="post">
+						<input type="hidden" name="CSFRToken" value="{$CSFRToken}">
+						<input type="hidden" name="action" value="makePremium">
+						<input type="submit" value="Make Premium">
+					</form>
+				{/if}
+			</td>
+		</tr>
+		<tr class="alternate">
+			<th>Stats Dates</th>
+			<td>{$supportGroupStats->getStart()|date_format} to {$supportGroupStats->getEnd()|date_format}</td>
+		</tr>
+		<tr>
+			<th>Requests Created</th>
+			<td>{$supportGroupStats->getNumberRequestsCreated()}</td>
+		</tr>
+		<tr class="alternate">
+			<th>Requests Closed</th>
+			<td>{$supportGroupStats->getNumberRequestsClosed()}</td>
+		</tr>
+		<tr>
+			<th>Requests Cancelled</th>
+			<td>{$supportGroupStats->getNumberRequestsCancelled()}</td>
+		</tr>
+	</table>
+	
+	<h2>Members</h2>
+	
+	<table class="data">
+		<tr>
+			<th>ID</th>
+			<th>User</th>
+			<th>Created Account?</th>
+			<th>Request?</th>
+			<th>Admin?</th>
+		</tr>
+		{foreach $supportGroup->getMembers() as $member}
+			<tr class="{cycle values="alternate,"}">
+				<td><a href="/sysadmin/user.php?id={$member->getId()|escape}">{$member->getId()|escape}</a></td>
+				<td>{$member->getDisplayName()|escape}</td>
+				<td>{if $member->isAccountCreated()}Yes{else}No{/if}</td>
+				<td>
+					{if $member->canMakeRequests()}
+						Yes
+						{if !$member->isAdmin()}
+							<form method="post">
+								<input type="hidden" name="CSFRToken" value="{$CSFRToken}">
+								<input type="hidden" name="action" value="removeMakeRequests">
+								<input type="hidden" name="userID" value="{$member->getId()}">
+								<input type="submit" value="Remove">
+							</form>
+						{/if}
+					{else}
+						No
+						<form method="post">
+							<input type="hidden" name="CSFRToken" value="{$CSFRToken}">
+							<input type="hidden" name="action" value="allowMakeRequests">
+							<input type="hidden" name="userID" value="{$member->getId()}">
+							<input type="submit" value="Add">
+						</form>							
+					{/if}
+				</td>
+				<td>
+					{if $member->isAdmin()}
+						Yes
+						<form method="post">
+							<input type="hidden" name="CSFRToken" value="{$CSFRToken}">
+							<input type="hidden" name="action" value="removeAdmin">
+							<input type="hidden" name="userID" value="{$member->getId()}">
+							<input type="submit" value="Remove">
+						</form>						
+					{else}
+						No						
+						<form method="post">
+							<input type="hidden" name="CSFRToken" value="{$CSFRToken}">
+							<input type="hidden" name="action" value="allowAdmin">
+							<input type="hidden" name="userID" value="{$member->getId()}">
+							<input type="submit" value="Add">
+						</form>					
+					{/if}
+				</td>
+			</tr>
+		{/foreach}
+	</table>
+	
+	<h2>Add Members</h2>
+	
+	<p>Add Email Address</p>
+
+	<form method="post">
+		<input type="hidden" name="CSFRToken" value="{$CSFRToken}">
+		<input type="hidden" name="action" value="addEmail">
+		<input type="email" name="email">		
+		<input type="submit" value="Add Email Address">
+	</form>		
+	
+	
+{/block}
+

@@ -1,0 +1,21 @@
+Hello {$member->getDisplayName()},
+
+There is a new Request from {$request->getCreatedByDisplayName()}.
+
+Group:
+{$supportGroup->getTitle()}
+
+Request:
+{$request->getSummary()}
+{$request->getRequest()}
+
+To reply, reply to this email directly or visit:
+https://{$httpsHost}/request.php?id={$request->getId()}#ReplyForm
+
+To adjust when you receive these alert emails, please visit:
+https://{$httpsHost}/mySchedule.php
+
+Thanks,
+Here's a Hand.
+
+

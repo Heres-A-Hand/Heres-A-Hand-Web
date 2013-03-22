@@ -1,0 +1,108 @@
+{*
+Copyright 2011-2013 Here's A Hand Limited
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+
+You may obtain a copy of the License at
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*}
+
+
+<div class="scheduleItem">
+	<div class="scheduleItemInner">	
+		<form action="/actions/editAdvancedSchedule.php?id={$schedule->getId()}" method="post" class="clearfix">
+			<input type="hidden" name="id" value="{$schedule->getId()}">
+			<fieldset class="group">
+				<h3>Don't contact me by</h3>
+				<ul>
+					{foreach $emails as $email}
+						<li class="email">
+							<label>
+								<input type="checkbox" name="emails[]" value="{$email->getId()}" {if $schedule->hasEmail($email)}checked{/if}>
+								{$email->getEmail()|escape}
+							</label>
+						</li>
+					{/foreach}
+					{foreach $telephones as $telephone}
+						<li class="telephone">
+							<label>
+								<input type="checkbox" name="telephones[]" value="{$telephone->getId()}" {if $schedule->hasTelephone($telephone)}checked{/if}>
+								(+{$telephone->getInternationalDialingCode()}) {$telephone->getNumber()|escape}
+							</label>
+						</li>
+					{/foreach}
+					{foreach $twitters as $twitter}
+						<li class="twitter">
+							<label>
+								<input type="checkbox" name="twitters[]" value="{$twitter->getId()}" {if $schedule->hasTwitter($twitter)}checked{/if}>
+								@{$twitter->getUserName()|escape}
+							</label>
+						</li>
+					{/foreach}
+				</ul>
+			</fieldset>
+			<fieldset class="group">
+				<h3>between the hours</h3>
+				<select name="fromHours">
+					{for $i=0 to 23}
+						<option value="{$i}" {if $schedule->getFromHour() == $i}selected{/if}>
+							{if $i == 0}Midnight{else if $i < 12}{$i}am{else if $i == 12}noon{else}{$i-12}pm{/if}
+						</option>
+					{/for}
+				</select>
+				and
+				<select name="toHours">
+					{for $i=0 to 23}
+						<option value="{$i}" {if $schedule->getToHour() == $i}selected{/if}>
+							{if $i == 0}Midnight{else if $i < 12}{$i}am{else if $i == 12}noon{else}{$i-12}pm{/if}
+						</option>
+					{/for}
+				</select>
+			</fieldset>
+			<fieldset class="group days">
+				<h3>on these days</h3>
+				<ul>
+					<li><label><input type="checkbox" name="days[]" value="mon" {if $schedule->hasDay('mon')}checked{/if}>Mon</label></li>
+					<li><label><input type="checkbox" name="days[]" value="tue" {if $schedule->hasDay('tue')}checked{/if}>Tue</label></li>
+					<li><label><input type="checkbox" name="days[]" value="wed" {if $schedule->hasDay('wed')}checked{/if}>Wed</label></li>
+					<li><label><input type="checkbox" name="days[]" value="thu" {if $schedule->hasDay('thu')}checked{/if}>Thu</label></li>
+					<li><label><input type="checkbox" name="days[]" value="fri" {if $schedule->hasDay('fri')}checked{/if}>Fri</label></li>
+					<li><label><input type="checkbox" name="days[]" value="sat" {if $schedule->hasDay('sat')}checked{/if}>Sat</label></li>
+					<li><label><input type="checkbox" name="days[]" value="sun" {if $schedule->hasDay('sun')}checked{/if}>Sun</label></li>
+				</ul>
+			</fieldset>
+			<fieldset class="group">
+				<h3>for these types of requests</h3>
+				<ul>
+					{foreach $types as $groupID=>$typesInThisgroup}
+						{foreach $typesInThisgroup as $type}
+							<li>
+								<label>
+									<input type="checkbox" name="types[]" value="{$type->getId()}" {if $schedule->hasRequestType($type)}checked{/if}>
+									{$type->getTitle()|escape}
+								</label>
+							</li>
+						{/foreach}
+					{/foreach}
+				</ul>
+			</fieldset>
+			<div class="actions">
+				<input type="submit" value="Save Changes">
+				<input type="submit" value="Delete" class="delete">
+			</div>
+		</form>
+<!--  		<form class="delete" action="/actions/deleteSchedule.php" method="post" onsubmit="return confirm('Are you sure?');">
+			<div class="actions">
+				<input type="hidden" name="id" value="{$schedule->getId()}">
+				<input type="submit" value="Delete" class="delete">
+			</div>
+		</form>-->
+	</div>
+</div>

@@ -1,0 +1,52 @@
+{*
+Copyright 2011-2013 Here's A Hand Limited
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+
+You may obtain a copy of the License at
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*}
+
+<label><input type="checkbox" name="days[]" value="mon" {if $contact->hasSimpleScheduleDay('mon')}checked{/if}>Mon</label>
+<label><input type="checkbox" name="days[]" value="tue" {if $contact->hasSimpleScheduleDay('tue')}checked{/if}>Tue</label>
+<label><input type="checkbox" name="days[]" value="wed" {if $contact->hasSimpleScheduleDay('wed')}checked{/if}>Wed</label>
+<label><input type="checkbox" name="days[]" value="thu" {if $contact->hasSimpleScheduleDay('thu')}checked{/if}>Thu</label>
+<label><input type="checkbox" name="days[]" value="fri" {if $contact->hasSimpleScheduleDay('fri')}checked{/if}>Fri</label>
+<label><input type="checkbox" name="days[]" value="sat" {if $contact->hasSimpleScheduleDay('sat')}checked{/if}>Sat</label>
+<label><input type="checkbox" name="days[]" value="sun" {if $contact->hasSimpleScheduleDay('sun')}checked{/if}>Sun</label>
+
+From 
+<select name="fromHours">
+	{for $i=0 to 23}
+		<option value="{$i}" {if $contact->getSimpleScheduleFromHour() == $i}selected{/if}>
+			{if $i == 0}Midnight{else if $i < 12}{$i}am{else if $i == 12}noon{else}{$i-12}pm{/if}
+		</option>
+	{/for}
+</select>:<select name="fromMins">
+	{for $i=0 to 59}
+		<option value="{$i}" {if $contact->getSimpleScheduleFromMin() == $i}selected{/if}>{$i}</option>
+	{/for}
+</select>
+To 
+<select name="toHours">
+	{for $i=0 to 23}
+		<option value="{$i}" {if $contact->getSimpleScheduleToHour() == $i}selected{/if}>
+			{if $i == 0}Midnight{else if $i < 12}{$i}am{else if $i == 12}noon{else}{$i-12}pm{/if}
+		</option>
+	{/for}
+</select>:<select name="toMins">
+	{for $i=0 to 59}
+		<option value="{$i}" {if $contact->getSimpleScheduleToMin() == $i}selected{/if}>{$i}</option>
+	{/for}
+</select>
+
+<input type="hidden" name="CSFRToken" value="{$CSFRToken}">
+<input type="hidden" name="id" value="{$contact->getId()}">
+<input type="submit"  class="" value="Edit">

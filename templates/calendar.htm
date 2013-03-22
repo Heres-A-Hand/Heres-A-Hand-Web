@@ -1,0 +1,65 @@
+{*
+Copyright 2011-2013 Here's A Hand Limited
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+
+You may obtain a copy of the License at
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*}
+
+{extends file="page.htm"}
+
+{block name="navButtons"}
+				<a href="/myHolidays.php" class="button">Setup a holiday now</a>
+				<a href="/mySchedule.php" class="button">Update your schedule</a>
+{/block}		
+
+
+{block name="content"}
+
+<div class="calwrapper">
+	{if $inStrictMonthMode}<h3>{$monthString} {$year}</h3>{/if}
+	<span class="buttons-wrap clearfix">
+		<a href="{$prevURL}" class="button prev">&laquo; Previous month</a><a href="{$nextURL}" class="button next">Next Month &raquo;</a>
+	</span>
+	<table class="calendar">
+		<tr><th><span class="day">Mon</span></th><th><span class="day">Tue</span></th><th><span class="day">Wed</span></th><th><span class="day">Thu</span></th><th><span class="day">Fri</span></th><th class="weekend"><span class="day">Sat</span></th><th class="weekend"><span class="day">Sun</span></th></tr>
+		{foreach $requests as $date=>$requestsToday}
+			{if  $requestsToday@index % 7 == 0}<tr>{/if}
+				<td class="{if $currentUserOnHoliday[$date]}onHoliday{/if} day{$requestsToday@index % 7}">
+					<div class="date">{$date}</div>
+					{foreach $holidays[$date] as $holiday}
+						<div>
+							{if $holiday->getUserAccountId() == $currentUser->getId()}
+								You are on holiday.
+							{else}
+								{$holiday->getDisplayName()|escape} is on holiday.
+							{/if}
+						</div>
+					{/foreach}
+					{foreach $requestsToday as $request}
+						<div class="request {if $request->isOpen()}openRequest{else}notOpenRequest{/if}">
+							<a href="/request.php?id={$request->getId()}" class="entry">
+								<span class="time">{$request->getStartAtInSeconds()|date_format:'%l:%M %P'}</span>
+								<span class="summary">{$request->getSummary()|escape|nl2br}</span>
+							</a>
+						</div>
+					{/foreach}
+				</td>
+			{if  $requestsToday@index % 7 == 6}</tr>{/if}
+		{/foreach}
+	</table>
+	<span class="buttons-wrap clearfix">
+		<a href="{$prevURL}" class="button prev">&laquo; Previous month</a><a href="{$nextURL}" class="button next">Next Month &raquo;</a>
+	</span>
+</div>
+
+{/block}
+

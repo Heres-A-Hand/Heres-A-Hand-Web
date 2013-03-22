@@ -1,0 +1,22 @@
+Hello {$member->getDisplayName()},
+
+Group:
+{$supportGroup->getTitle()}
+
+There is a response to a request:
+{$request->getSummary()}
+{$request->getRequest()}
+
+The response is: 
+{$requestResponse->getResponse()}
+
+From:
+{$requestResponse->getDisplayName()}
+
+For more details, please visit:
+https://{$httpsHost}/request.php?id={$request->getId()}
+
+Thanks,
+Here's a Hand.
+
+

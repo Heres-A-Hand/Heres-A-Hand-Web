@@ -1,0 +1,22 @@
+Hello {$member->getDisplayName()},
+
+There is a new Request from {$request->getCreatedByDisplayName()}.
+
+Group:
+{$supportGroup->getTitle()}
+
+Request:
+{$request->getSummary()}
+{$request->getRequest()}
+
+They are using Here's A Hand to co-ordinate this request. To create your free account 
+and reply to this message please visit:
+https://{$httpsHost}/confirmEmail.php?id={$email->getId()}&c={$email->getConfirmCode()}
+
+If you'd prefer not to receive any future messages, please visit:
+https://{$httpsHost}/stopUserEmailSendBeforeConf.php?id={$email->getId()}&c={$email->getStopSendBeforeConfirmationCode()}
+
+Thanks,
+Here's a Hand.
+
+

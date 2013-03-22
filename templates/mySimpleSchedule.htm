@@ -1,0 +1,123 @@
+{*
+Copyright 2011-2013 Here's A Hand Limited
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+
+You may obtain a copy of the License at
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*}
+
+
+{extends file="page.htm"}
+
+
+{block name="navButtons"}
+	<form  action="/mySchedule.php" method="post"  >
+		<input type="hidden" name="CSFRToken" value="{$CSFRToken}">
+		<input type="hidden" name="Use" value="Advanced" />
+		<input type="submit" class="submit" value="Use Advanced Scheduler">
+	</form>	
+{/block}
+
+{block name="content"}
+
+{if $inSignUpWizard}
+	<div class="signUpWizard">
+		<div class="title">Welcome!</div>
+		<div class="text">
+			You can set up not to be disturbed at certain times; for instance maybe you don't want to contacted when your working? 
+			You can edit these later from your account settings.
+		</div>
+		<div class="nextWrapper"><a href="/wizardOver.php" class="next">Done</a></div>
+	</div>
+{/if}
+
+<div>
+
+	<div class="clearfix" style="padding:0 0 10px 0;">
+		<h2>Your Schedule</h2>
+	</div>
+
+	<h3>What type of requests should we tell you about?</h3>
+	{foreach $groups as $group}
+		<h4>{$group->getTitle()|escape}</h4>
+		{foreach $group->getRequestTypes() as $requestType}
+		{$enabled = $requestType->getSimpleScheduleRuleForUser($currentUser)}
+			<div class="requestType clearfix {if $enabled}enabled{else}disabled{/if}">
+				<span class="requestTitle">{$requestType->getTitle()|escape}</span>
+				{if $enabled}
+					<img src="/theme.{$theme}/images/greentick.png" title="Sent">
+					<form  action="/actions/setSimpleScheduleRuleForRequestType.php" method="post">
+						<input type="hidden" name="CSFRToken" value="{$CSFRToken}">
+						<input type="hidden" name="requestTypeID" value="{$requestType->getId()}" />
+						<input type="hidden" name="newValue" value="dontsend" />
+						<input type="submit" class="submit" value="Don't send">
+					</form>	
+				{else}
+					<img src="/theme.{$theme}/images/cross.png" title="Sent">
+					<form  action="/actions/setSimpleScheduleRuleForRequestType.php" method="post">
+						<input type="hidden" name="CSFRToken" value="{$CSFRToken}">
+						<input type="hidden" name="requestTypeID" value="{$requestType->getId()}" />
+						<input type="hidden" name="newValue" value="send" />
+						<input type="submit" class="submit" value="Send">
+					</form>	
+				{/if}					
+			</div>
+		{/foreach}
+	{/foreach}
+	
+	<div class="communicationMethods">
+		<h3>How and when should we contact you?</h3>
+		{foreach $emails as $email}
+			<div class="email">
+				<div class="contact clearfix">
+					<div class="communicationDetails">{$email->getEmail()|escape}</div>
+					{if !$email->isConfirmed()}
+						<div class="confirmNeeded">Please check your email for instructions on how to confirm this address.</div>
+					{else}
+						<form action="/actions/editEmailSimpleSchedule.php" method="post" class="inOneLine">
+							{include file="simpleScheduleItem.htm" contact=$email}
+						</form>
+					{/if}
+				</div>
+			</div>
+		{/foreach}	
+		{foreach $telephones as $telephone}
+			<div class="mobile">
+				<div class="contact clearfix">
+					<div class="communicationDetails">(+{$telephone->getInternationalDialingCode()}) {$telephone->getNumber()|escape}</div>
+					{if !$telephone->isConfirmed()}
+						<div class="confirmNeeded">Please <a href="/myCommunicationMethods.php">confirm this</a>.</div>
+					{else}
+						<form action="/actions/editTelephoneSimpleSchedule.php" method="post" class="inOneLine">
+							{include file="simpleScheduleItem.htm" contact=$telephone}
+						</form>
+					{/if}
+				</div>
+			</div>
+		{/foreach}
+		{foreach $twitters as $twitter}
+			<div class="twitter">			
+				<div class="contact clearfix">
+					<div class="communicationDetails">@{$twitter->getUserName()|escape}</div>
+					<form action="/actions/editTwitterSimpleSchedule.php" method="post" class="inOneLine">
+						{include file="simpleScheduleItem.htm" contact=$twitter}
+					</form>
+				</div>
+			</div>
+		{/foreach}
+	</div>
+	
+</div>
+
+
+{/block}
+
+

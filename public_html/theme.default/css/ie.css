@@ -1,0 +1,61 @@
+/**
+Copyright 2011-2013 Here's A Hand Limited
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+
+You may obtain a copy of the License at
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+**/
+
+form.login label.checkbox input {border: none;}
+
+input[type="submit"],
+input.submit{
+  background: url(../images/submitbg.png) top repeat-x #954a00;
+  border: 1px solid #944900;
+  color: #fff;
+}
+
+input[type="submit"]:hover,
+input.submit:hover {
+  background: url(../images/submitbg-hover.png) top repeat-x #c36500;
+  border: 1px solid #944900;
+  color: #fff;
+    }
+    
+input[type="submit"]:active,
+input.submit:active {
+  background: #944900;
+  border: 1px solid #944900;
+  color: #fff;
+    }
+
+
+
+a.button,
+input.green[type="submit"]{
+  background: url(../images/buttonbg.png) top repeat-x #186473;
+  border: 1px solid #186473;
+  color: #fff;
+}
+
+a.button:hover,
+input.green[type="submit"]:hover{
+  background: url(../images/buttonbg-hover.png) top repeat-x #4a9cae;
+  border: 1px solid #186473;
+  color: #fff;
+    }
+    
+a.button:active,
+input.green[type="submit"]:active {
+  background: #186473;
+  border: 1px solid #186473;
+  color: #fff;
+    }

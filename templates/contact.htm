@@ -1,0 +1,47 @@
+{*
+Copyright 2011-2013 Here's A Hand Limited
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+
+You may obtain a copy of the License at
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*}
+
+
+{extends file="page.htm"}
+
+
+{block name="content"}
+
+
+
+<h1>Contact Us</h1>
+
+
+<p>Please email us on <a href="mailto:catherine@heresahand.org.uk">catherine@heresahand.org.uk</a>, 
+	   phone us on +44 (0)7407 617177 or fill in the form below.</p>
+
+<form method="POST">
+	<input type="hidden" name="CSFRToken" value="{$CSFRToken}">
+	
+	<div>
+		<label for="email">Email</label>
+		<input type="email" name="email" id="email" value="{$email|escape}">
+	</div>
+	
+	<div>
+		<label for="message">Message</label>
+		<textarea name="message" id="message"></textarea>
+	</div>
+	
+	<input type="submit" value="send">
+	
+	
+{/block}

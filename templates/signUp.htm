@@ -1,0 +1,57 @@
+{*
+Copyright 2011-2013 Here's A Hand Limited
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+
+You may obtain a copy of the License at
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*}
+
+{extends file="page.htm"}
+
+
+{block name="content"}
+	<div id="signupForm">
+
+		<form action="" method="post">
+
+			<div class="input">
+				<label for="Email">Type your email address</label>
+				<input type="email" value="" name="email" id="Email" class="textfield">
+			</div>			
+
+			<div class="input">
+				<label for="Title">Choose a title for your group</label>
+				<input type="text" value="" name="title" id="Title" class="textfield">
+			</div>
+			
+			<div class="input">
+				<label for="Password">Enter the password to get a premium group. If you don't know it, leave it blank and you can still get a trial group.</label>
+				<input type="password" value="" name="password" id="Password" class="textfield">
+			</div>
+
+			<div class="input">
+				{$recaptcha}
+			</div>
+
+			<div class="buttons">
+				<input type="submit" value="Create my account" class="submit">
+			</div>
+
+		</form>
+
+		<p>To find out if you are legible to <a href="/signUpPilot.php">take part in our pilot and get a free premium account, click here</a>.</p>
+
+		
+	</div>
+
+{/block}
+
+

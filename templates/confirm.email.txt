@@ -1,0 +1,10 @@
+To confirm your account, please visit:
+
+https://{$httpsHost}/confirmEmail.php?id={$id}&c={$confirm_code}
+
+This will give you access to {if count($groups) == 1}this group{else}these groups{/if}:
+
+{foreach $groups as $group}{$group->getTitle()}
+{/foreach}
+
+Thanks,

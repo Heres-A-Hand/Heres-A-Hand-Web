@@ -1,0 +1,141 @@
+{*
+Copyright 2011-2013 Here's A Hand Limited
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+
+You may obtain a copy of the License at
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*}
+
+{extends file="page.htm"}
+
+
+{block name="navButtons"}
+				<a href="/myHolidays.php" class="button">Setup a holiday now</a>
+				<a href="/mySchedule.php" class="button">Update your schedule</a>
+	
+{/block}		
+
+{block name="content"}
+
+	{if $inSignUpWizard}
+		<div class="signUpWizard">
+			<div class="title">Welcome!</div>
+			<div class="text">
+				Invite friends and family to this private group by adding contact details below. 
+				You can add more or remove any mistakes later.
+			</div>
+			<div class="nextWrapper"><a href="/myCommunicationMethods.php" class="next">Done</a></div>
+		</div>
+	{/if}
+
+	<div class="leftCol block">
+		<div class="teamList">
+			<h2>The members for {$supportGroup->getTitle()|escape}</h2>
+			{foreach $members as $member}
+				<div class="user">
+					<div class="details clearfix">
+						<div class="avatar"><img src="{$member->getAvatarURL()}" class="avatar"></div>
+						<div class="wrap">
+							<div class="name"><h2>{$member->getDisplayName()|escape}</h2></div>
+							<div class="status">
+							{if !$member->isAccountCreated()}
+								Has not accepted invitation yet
+							{else}
+								Team member!
+							{/if}
+							</div>
+						</div>
+					</div>
+					
+					{if $supportGroup->isAdmin()}
+						<div class="actions">
+							{if $member->canMakeRequests()}
+								<form action="/actions/removeSendRequestPermission.php?supportGroup={$supportGroup->getId()}" method="post">
+									<input type="hidden" name="CSFRToken" value="{$CSFRToken}">
+									<input type="hidden" name="member" value="{$member->getId()}">
+									<span class="title">Can Make Requests</span>
+									<input type="submit" class="toggle yes" value="Yes">
+								</form>
+							{else}
+								<form action="/actions/allowSendRequestPermission.php?supportGroup={$supportGroup->getId()}" method="post">
+									<input type="hidden" name="CSFRToken" value="{$CSFRToken}">
+									<input type="hidden" name="member" value="{$member->getId()}">
+									<span class="title">Can Make Requests</span>
+									<input type="submit" class="toggle no" value="No">
+								</form>
+							{/if}
+						</div>
+						<div class="actions">
+							{if $member->isAdmin()}
+								<form action="/actions/removeAdminPermission.php?supportGroup={$supportGroup->getId()}" method="post">
+									<input type="hidden" name="CSFRToken" value="{$CSFRToken}">
+									<input type="hidden" name="member" value="{$member->getId()}">
+									<span class="title">Is Manager</span> 
+									{if $member->getId() != $currentUser->getId()}
+									<input type="submit" class="toggle yes" value="Yes">							
+									{/if}
+								</form>
+							{else}
+								<form action="/actions/allowAdminPermission.php?supportGroup={$supportGroup->getId()}" method="post">
+									<input type="hidden" name="CSFRToken" value="{$CSFRToken}">
+									<input type="hidden" name="member" value="{$member->getId()}">
+									<span class="title">Is Manager</span>
+									<input type="submit" class="toggle no" value="No">
+								</form>
+							{/if}
+						</div>
+						<div class="remove">
+							<form action="/actions/removeFromTeam.php?supportGroup={$supportGroup->getId()}" method="post" onsubmit="return confirm('Are you sure you want to remove this team member?');">
+								<input type="hidden" name="member" value="{$member->getId()}">
+								<input type="hidden" name="CSFRToken" value="{$CSFRToken}">
+								<input type="submit" class="remove" value="Remove from team">
+							</form>
+						</div>
+					{/if}
+				</div>
+			{/foreach}
+		</div>
+	</div>
+	
+	<div class="rightCol block">
+		{if $supportGroup->isAdmin()}
+			<div class="team">
+				<div class="details">
+					<h2>Add someone to this group</h2>
+					<form action="/actions/addToSupportGroup.php?supportGroup={$supportGroup->getId()}" method="post" class="add clearfix">
+						<input type="hidden" name="CSFRToken" value="{$CSFRToken}">
+						{if $supportGroup->isPremium()}
+							<p>Please enter an email address or a phone number; either is fine.</p>
+						{/if}
+						<label for="email">E-mail address</label> 
+						<input id="email" type="email" name="addNewEmail" placeholder="Add email ...">
+						{if $supportGroup->isPremium()}
+							<label for="mobile">Or Mobile phone number</label>
+							<select name="addNewTelephoneCountry">
+								{foreach $countries as $country}<option value="{$country['id']}">{$country['title']} (+{$country['international_dailing_code']})</option>{/foreach}
+							</select>
+							<input id="mobile" type="text" name="addNewTelephone" value="" placeholder="Add telephone ...">
+						{else}
+							<p>(If this group was a premium group, you could add people by mobile phone number.)</p>
+						{/if}
+
+						<input class="submit" type="submit" value="Add new user">
+					</form>
+					<a href="/addMultipleToTeam.php">Add multiple people at once.</a>
+				</div>
+			</div>
+		{/if}
+	</div>
+
+
+	<script src="js/rollovers.js"  type="text/javascript"></script>
+
+{/block}

@@ -1,0 +1,108 @@
+{*
+Copyright 2011-2013 Here's A Hand Limited
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+
+You may obtain a copy of the License at
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*}
+
+{extends file="page.htm"}
+
+
+{block name="navButtons"}
+
+	<a href="/team.php" class="button">Add team members</a>
+
+{/block}
+
+
+{block name="content"}
+<div class="leftCol block">
+
+	<h2>Manage {$supportGroup->getTitle()|escape}</h2>
+
+
+	<div class="module clearfix">
+		<h3>Group Details</h3>
+	
+		<form class="standard" action="/actions/editGroupDetails.php?supportGroup={$supportGroup->getId()}" method="post">
+			<input type="hidden" name="CSFRToken" value="{$CSFRToken}">
+			
+			<span class="fieldWrap">
+				<label for="Title">Title</label>
+				<input type="text" name="Title" id="Title" value="{$supportGroup->getTitle()|escape}">
+			</span>
+			
+			<span class="fieldWrap">
+				<label for="Description">Description</label>
+				<textarea name="Description" id="Description">{$supportGroup->getDescription()|escape}</textarea>
+			</span>
+			<input type="submit"  class="green" value="Save Changes">
+		</form>
+	</div>
+
+	<div class="module clearfix">
+		<h3>Request Types</h3>
+		{foreach $supportGroup->getRequestTypes() as $rt}
+			{if !$rt->isActive()}
+				<div class="requestType clearfix disabled">
+					<span class="requestTitle">{$rt->getTitle()|escape}</span>
+					<form action="/actions/enableRequestType.php?supportGroup={$supportGroup->getId()}" method="post">
+						<input type="hidden" name="CSFRToken" value="{$CSFRToken}">
+						<input type="hidden" name="Enable" value="{$rt->getId()}">
+						<input type="submit" value="Enable this type">
+					</form>
+				</div>
+			{else}
+				<div class="requestType clearfix enabled">
+					<span class="requestTitle">{$rt->getTitle()|escape}</span>
+					<form action="/actions/disableRequestType.php?supportGroup={$supportGroup->getId()}" method="post">
+						<input type="hidden" name="CSFRToken" value="{$CSFRToken}">
+						<input type="hidden" name="Disable" value="{$rt->getId()}">
+						<input type="submit" value="Disable this type">
+					</form>
+				</div>
+			{/if}
+		{/foreach}
+		<form id="newType" action="/actions/newRequestType.php?supportGroup={$supportGroup->getId()}" method="post">
+			<input type="hidden" name="CSFRToken" value="{$CSFRToken}">
+			<input type="text" name="NewRequestType" placeholder="Add new request type ..."><input type="submit" value="Add request type">
+		</form>
+	</div>
+					
+	<div class="module clearfix">
+		<h3>Group Picture</h3>
+	
+		<img id="avatar" src="{$supportGroup->getAvatarURL()|escape}">
+	
+		<form class="standard" id="newphoto" action="/groupAdmin.php" method="post"  enctype="multipart/form-data" >
+			<input type="hidden" name="CSFRToken" value="{$CSFRToken}">
+	
+			<input type="hidden" name="MAX_FILE_SIZE" value="5000000" />
+			<input id="upload" type="file" name="newAvatar">
+	
+			<input type="submit" class="green" value="Upload New Picture">
+		</form>
+	</div>
+</div>
+
+<div class="rightCol">
+		<h3>Group Type</h3>
+		{if $supportGroup->isPremium()}
+		<p class="premium">Premium</p>
+		{else}
+		<p class="basic">Basic</p>
+		{/if}
+</div>
+
+
+{/block}
+

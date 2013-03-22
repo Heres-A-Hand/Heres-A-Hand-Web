@@ -1,0 +1,17 @@
+Hello {$member->getDisplayName()},
+
+There is response to some news from {$supportGroupNewsArticleResponse->getDisplayName()}.
+
+Group:
+{$supportGroup->getTitle()}
+
+Response:
+{$supportGroupNewsArticleResponse->getResponse()}
+
+To reply, reply to this email directly or visit:
+https://{$httpsHost}/supportGroupNewsArticle.php?id={$supportGroupNewsArticle->getId()}#ReplyForm
+
+Thanks,
+Here's a Hand.
+
+

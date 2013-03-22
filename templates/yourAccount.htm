@@ -1,0 +1,153 @@
+{*
+Copyright 2011-2013 Here's A Hand Limited
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+
+You may obtain a copy of the License at
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*}
+
+{extends file="page.htm"}
+
+			
+
+{block name="content"}
+
+<div class="leftCol block">
+
+	<h2>Your Account Details</h2>
+
+	<div class="module clearfix name">
+	<form  action="/actions/editAccountDetails.php" method="post">
+		<input type="hidden" name="CSFRToken" value="{$CSFRToken}">
+
+		<label for="DisplayName">Name</label>
+		<input type="text" name="DisplayName" id="DisplayName" value="{$currentUser->getDisplayName()|escape}">
+		<input type="submit" class="submit" value="Save Changes">
+	</form>
+	</div>
+	
+	
+	<div class="module clearfix picture">
+		<h3>Your Picture</h3>
+	
+		<img src="{$currentUser->getAvatarURL()|escape}">
+	
+		<form  action="/yourAccount.php" method="post"  enctype="multipart/form-data" >
+			<input type="hidden" name="CSFRToken" value="{$CSFRToken}">
+	
+			<input type="hidden" name="MAX_FILE_SIZE" value="5000000" />
+			<input type="file" name="newAvatar">
+	
+			<input type="submit" class="submit" value="Upload New Picture">
+		</form>
+	</div>
+
+	<div class="module clearfix password">
+	<h3>Your Password</h3>
+	
+		<form  action="/yourAccount.php" method="post">
+			<input type="hidden" name="CSFRToken" value="{$CSFRToken}">
+	
+			<label for="OldPassword">Old Password</label>
+			<input type="password" name="OldPassword" id="OldPassword">
+	
+			<label for="NewPassword1">New Password</label>
+			<input type="password" name="NewPassword1" id="NewPassword1">
+	
+			<label for="NewPassword2">Repeat New Password</label>
+			<input type="password" name="NewPassword2" id="NewPassword2">
+	
+			<input type="submit" class="submit" value="Change Password">
+		</form>
+	</div>
+
+	<div class="module clearfix survey">
+	{if !$currentUser->getYearOfBirth() or !$currentUser->getGender()}
+
+		<h3>User Survey</h3>
+
+		<p>We are researching our users to help improve our service.<br /><br />Would you mind telling us your:</p>
+		
+		<form action="/actions/addUserSurvey.php" method="post">
+			<input type="hidden" name="CSFRToken" value="{$CSFRToken}">
+			{if !$currentUser->getYearOfBirth()}
+			<div class="left">
+				<label>Your year of birth</label>
+				<select name="year">
+					<option value="" selected>N/a</option>
+					{for $i = 2011 to 1900 step -1}<option value="{$i}">{$i}</option>{/for}
+				</select>
+			{/if}
+			</div>
+			
+			{if !$currentUser->getGender()}
+			<div class="right">
+				<label>Your gender?</label>
+				<select name="gender">
+					<option value="">N/a</option>
+					<option value="m">Male</option>
+					<option value="f">Female</option>
+				</select>
+			{/if}
+			</div>
+			<input type="submit" class="submit" value="Sumbit your answers">
+		</form>
+	{/if}
+	</div>
+</div>
+
+<div class="rightCol block">
+		<h2>Your contact details</h2>
+		
+		<div class="module">
+			<h3>How requests are sent to you</h3>
+			<div class="communicationMethods">
+				{foreach $currentUser->getEmails() as $email}
+					<div class="email">
+						<div class="details clearfix">
+							<div class="communicationDetails">{$email->getEmail()|escape}</div>
+							{if !$email->isConfirmed()}<div class="confirmNeeded">Please check your email for instructions on how to confirm this address.</div>{/if}
+						</div>
+					</div>
+				{/foreach}		
+				{foreach $currentUser->getTelephones() as $telephone}
+					<div class="mobile">
+						<div class="details clearfix">
+							<div class="communicationDetails">(+{$telephone->getInternationalDialingCode()}) {$telephone->getNumber()|escape}</div>
+							{if !$telephone->isConfirmed()}
+								<div class="confirmNeeded">Please <a href="/myCommunicationMethods.php">confirm this</a> number.</div>
+							{/if}
+						</div>
+					</div>		
+				{/foreach}
+				{foreach $currentUser->getTwitters() as $twitter}
+					<div class="twitter">			
+						<div class="details clearfix">
+							<div class="communicationDetails">@{$twitter->getUserName()|escape}</div>
+						</div>
+					</div>	
+				{/foreach}	
+			</div>
+		<div class="buttonWrapper"><a href="/myCommunicationMethods.php"  class="button">Change this</a></div>
+		</div>
+
+
+		<div class="module communicationSchedule">
+		<h3>When requests are sent to you</h3>
+
+		<div class="buttonWrapper"><a href="/mySchedule.php" class="button">Change your normal schedule</a></div>
+		<div class="buttonWrapper"><a href="/myHolidays.php" class="button">Change your holidays</a></div>
+	</div>
+</div>
+
+{/block}
+
+

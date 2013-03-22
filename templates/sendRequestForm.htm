@@ -1,0 +1,83 @@
+{*
+Copyright 2011-2013 Here's A Hand Limited
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+
+You may obtain a copy of the License at
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*}
+
+{if $supportGroup->canMakeRequests()}
+	<div class="sendMessageWrapper">
+		<h2>Send a new request</h2>
+		<form class="sendMessage" action="/actions/newRequest.php?supportGroup={$supportGroup->getId()}" method="post" id="SendMessageForm">
+			<input type="hidden" name="CSFRToken" value="{$CSFRToken}">
+			<div id="SubjectToLongWarning" style="display: none;">
+				You have used to many characters - please remove some! 
+				If you need to <a href="#" id="SendMessageDetailsLink2">add more details please click here</a>.
+			</div>
+			<div class="subject"><input id="SendMessageText" name="newMessageSummary" placeholder="Enter request ..."><span id="SendMessageTextLength"></span></div>
+
+			<div id="SendMessageExtras" class="clearfix">
+				<div id="SendMessageDetails">
+					<h3>Include more detail <span>{if $supportGroup->isPremium()}(This won't be included in SMS Messages.){/if}</span></h3>
+					<textarea name="newMessageRequest"></textarea>
+				</div>
+				{assign var='types' value=$supportGroup->getActiveRequestTypes()}
+				{if count($types) > 0}
+					<div class="types">
+						<h3>This is about:</h3>
+						<ul class="types">
+							{foreach $types as $type}
+								<li>
+									<label for="Type{$type->getId()}">{$type->getTitle()|escape}</label>
+									<input type="checkbox" class="types checkbox" id="Type{$type->getId()}" name="types[]" value="{$type->getId()}">
+								</li>
+							{/foreach}
+						</ul>
+					</div>
+				{/if}				
+				<div class="users clearfix"  id="SendMessageHideFrom">
+					<h3>Hide this request from:</h3>
+					<ul class="users">
+						{foreach $supportGroup->getMembers() as $member}
+							{if $member->getId() != $currentUser->getId()}
+								<li class="clearfix">
+									<img src="{$member->getAvatarURL()}">
+									<span class="wrap">
+									<label for="User{$member->getId()}">{$member->getDisplayName()|escape}</label>
+									<input type="checkbox" class="users checkbox" id="User{$member->getId()}" name="hide_members[]" value="{$member->getId()}">
+									<span class="icon"></span>
+									</span>
+								</li>
+							{/if}
+						{/foreach}
+					</ul>
+				</div>
+				<div class="calendar"  id="SendMessageCalendar" style="display: none;">
+					{include file="calendarEntryInputs.htm"}
+					<input type="hidden" name="incCalendar" id="SendMessageCalendarHiddenField" value="0">
+					{* unlike the others, this is hidden to start with because if the user has no JS they can just add 
+						the dates later. And we use JS to set the incCalendar flag which indicates to the back end 
+						whether the user wants to put this on the calendar or not. *}
+				</div>
+				<div class="advanced clearfix">
+			   		<div id="SendMessageCalendarLink" style="display: none;"><a href="#" class="button">Add to calendar</a></div>
+					<a href="#" id="SendMessageHideFromLink" class="button" >Hide from some people</a>					
+					<a href="#" id="SendMessageDetailsLink" class="button">Add more details</a>
+				</div>
+				<div class="submit clearfix">
+					<input type="submit" class="submit" value="Send Request">
+				</div>
+			</div>			
+		</form>
+	</div>
+	<script src="/js/sendMessageForm.js" type="text/javascript"></script>
+{/if}

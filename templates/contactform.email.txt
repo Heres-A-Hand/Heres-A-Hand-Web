@@ -1,0 +1,14 @@
+{if $user}From signed in user {$user->getId()} {$user->getDisplayName()}
+{/if}
+
+From Email:
+{$email}
+
+Message:
+{$message}
+
+IP:
+{$ip}
+
+Browser:
+{$browser}

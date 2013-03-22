@@ -1,0 +1,158 @@
+{*
+Copyright 2011-2013 Here's A Hand Limited
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+
+You may obtain a copy of the License at
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*}
+
+{extends file="page.htm"}
+
+{block name="navButtons"}
+
+				<a href="/myHolidays.php" class="button">Setup a holiday now</a>
+				<a href="/mySchedule.php" class="button">Update your schedule</a>
+{/block}
+
+{block name="content"}
+
+{if $inSignUpWizard}
+	<div class="signUpWizard">
+		<div class="title">Welcome!</div>
+		<div class="text">
+			Your group can communicate with you in many different ways, so please enter the ways you want them
+			to communicate with you below. You can edit these later from your account settings.
+		</div>
+		<div class="nextWrapper"><a href="/mySchedule.php" class="next">Done</a></div>
+	</div>
+{/if}
+
+
+<div class="communicationMethods">
+<div class="leftCol block">
+	<h2>Your current contact methods</h2>
+	{foreach $emails as $email}
+		<div class="email">
+			<div class="contact clearfix">
+				<div class="communicationDetails">{$email->getEmail()|escape}</div>
+				{if !$email->isConfirmed()}<div class="confirmNeeded">Please check your email for instructions on how to confirm this address.</div>{/if}
+				<div class="actions clearfix">
+					<form action="/actions/deleteUserEmail.php" method="post" onsubmit="return confirm('Are you sure you want to delete {$email->getEmail()|escape}?');">
+						<input type="hidden" name="CSFRToken" value="{$CSFRToken}">
+						<input type="hidden" name="id" value="{$email->getId()}">
+						<input type="submit"  class="delete" value="Delete">
+					</form>
+				</div>
+			</div>
+		</div>
+	{/foreach}	
+	{foreach $telephones as $telephone}
+		<div class="mobile">
+			<div class="contact clearfix">
+				<div class="communicationDetails">(+{$telephone->getInternationalDialingCode()}) {$telephone->getNumber()|escape}</div>
+				{if !$telephone->isConfirmed()}
+					<form action="/actions/confirmUserTelephone.php" method="post">
+						<input type="hidden" name="CSFRToken" value="{$CSFRToken}">
+						<input type="hidden" name="id" value="{$telephone->getId()}">
+						<div class="confirmNeeded">
+							<p>We texted you a password to confirm this telephone number.</p>
+							<p>Please enter it here: <input type="text" name="code"><input type="submit" value="Confirm"></p>
+						</div>
+					</form>
+				{/if}
+				<div class="actions clearfix">
+					<form action="/actions/deleteUserTelephone.php" method="post" onsubmit="return confirm('Are you sure you want to delete (+{$telephone->getInternationalDialingCode()}) {$telephone->getNumber()|escape}?');">
+						<input type="hidden" name="CSFRToken" value="{$CSFRToken}">
+						<input type="hidden" name="id" value="{$telephone->getId()}">
+						<input type="submit" class="delete" value="Delete">
+					</form>
+				</div>
+			</div>
+		</div>
+	{/foreach}
+	{foreach $twitters as $twitter}
+		<div class="twitter">			
+			<div class="contact clearfix">
+				<div class="communicationDetails">@{$twitter->getUserName()|escape}</div>
+				<div class="info">If you follow the user <a href="https://twitter.com/heresahand" target="_blank">@heresahand</a> we will send you a Direct Message every time a request is made</div>
+				<div class="actions clearfix">
+					<form action="/actions/deleteUserTwitter.php" method="post" onsubmit="return confirm('Are you sure you want to delete @{$twitter->getUserName()|escape}?');">
+						<input type="hidden" name="CSFRToken" value="{$CSFRToken}">
+						<input type="hidden" name="id" value="{$twitter->getId()}">
+						<input type="submit" class="delete" value="Delete">
+					</form>
+				</div>
+			</div>
+		</div>
+	{/foreach}
+</div>
+<div class="rightCol block">
+	<h2>Add more ways we can contact you</h2>
+	<div class="email clearfix">
+		<form method="post" action="/actions/newUserEmail.php">
+			<input type="hidden" name="CSFRToken" value="{$CSFRToken}">
+			<div class="contact clearfix">
+				<h3>Add your email address</h3>
+				<div class="communicationDetails"><input type="email" name="newEmail" value="" placeholder="Add email ..."></div>
+			</div>
+			<div class="actions clearfix">
+				<input type="submit" value="Add">
+			</div>
+		</form>
+	</div>
+	{if $currentUser->hasAnyPremiumGroups()}
+		<div class="mobile">
+			<form method="post" action="/actions/newUserTelephone.php">
+				<input type="hidden" name="CSFRToken" value="{$CSFRToken}">
+				<div class="contact clearfix">
+					<h3>Add your mobile number</h3>
+					<div class="communicationDetails">
+						<select name="newTelephoneCountry">
+							{foreach $countries as $country}<option value="{$country['id']}">{$country['title']} (+{$country['international_dailing_code']})</option>{/foreach}
+						</select>
+						<input type="text" name="newTelephone" value="" placeholder="Add telephone ...">
+					</div>
+				</div>
+				<div class="actions clearfix">
+					<input type="submit" value="Add">
+				</div>
+			</form>
+		</div>
+	{else}
+		<div class="mobile">
+			<div class="contact clearfix">
+				If you had any premium groups, you could add your mobile phone number and communicate by Text Messages.
+			</div>
+		</div>
+	{/if}
+	<div class="twitter clearfix">
+		<form method="post" action="/actions/newUserTwitter.php">
+			<input type="hidden" name="CSFRToken" value="{$CSFRToken}">
+			<div class="contact clearfix">
+				<div class="communicationDetails">
+					<h3>Add your @Twitter account</h3>
+					<input type="text" name="newTwitter" value="" placeholder="Add username ..."></div>
+			</div>
+			<div class="actions clearfix">
+				<input type="submit" value="Add">
+			</div>
+		</form>
+	</div>
+</table>
+</div>
+</div>
+
+
+
+
+{/block}
+
+

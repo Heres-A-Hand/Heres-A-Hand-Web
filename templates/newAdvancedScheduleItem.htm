@@ -1,0 +1,118 @@
+{*
+Copyright 2011-2013 Here's A Hand Limited
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+
+You may obtain a copy of the License at
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*}
+
+
+{extends file="page.htm"}
+
+
+
+{block name="content"}
+<div class="scheduleItems">
+
+	<h3>Add to your Schedule</h3>
+
+	<div class="scheduleItem">
+		<form action="/newAdvancedScheduleItem.php" method="post">
+			<input type="hidden" name="new" value="yes">
+			<fieldset class="group">
+				<h3>Don't contact me by</h3>
+				<ul>
+					{foreach $currentUser->getEmails() as $email}
+						<li class="email">
+							<label>
+								<input type="checkbox" name="emails[]" value="{$email->getId()}">
+								{$email->getEmail()|escape}
+							</label>
+						</li>
+					{/foreach}
+					{foreach $currentUser->getTelephones() as $telephone}
+						<li class="telephone">
+							<label>
+								<input type="checkbox" name="telephones[]" value="{$telephone->getId()}">
+								(+{$telephone->getInternationalDialingCode()}) {$telephone->getNumber()|escape}
+							</label>
+						</li>
+					{/foreach}
+					{foreach $currentUser->getTwitters() as $twitter}
+						<li class="twitter">
+							<label>
+								<input type="checkbox" name="twitters[]" value="{$twitter->getId()}">
+								@{$twitter->getUserName()|escape}
+							</label>
+						</li>
+					{/foreach}
+				</ul>
+			</fieldset>
+			<fieldset class="group">
+				<h3>between the hours</h3>
+				<select name="fromHours">
+					{for $i=0 to 23}
+						<option value="{$i}">
+							{if $i == 0}Midnight{else if $i < 12}{$i}am{else if $i == 12}noon{else}{$i-12}pm{/if}
+						</option>
+					{/for}
+				</select>
+				and
+				<select name="toHours">
+					{for $i=0 to 23}
+						<option value="{$i}">
+							{if $i == 0}Midnight{else if $i < 12}{$i}am{else if $i == 12}noon{else}{$i-12}pm{/if}
+						</option>
+					{/for}
+				</select>
+			</fieldset>
+			<fieldset class="group">
+				<h3>on these days</h3>
+				<ul>
+					<li><label><input type="checkbox" name="days[]" value="mon">Mon</label></li>
+					<li><label><input type="checkbox" name="days[]" value="tue">Tue</label></li>
+					<li><label><input type="checkbox" name="days[]" value="wed">Wed</label></li>
+					<li><label><input type="checkbox" name="days[]" value="thu">Thu</label></li>
+					<li><label><input type="checkbox" name="days[]" value="fri">Fri</label></li>
+					<li><label><input type="checkbox" name="days[]" value="sat">Sat</label></li>
+					<li><label><input type="checkbox" name="days[]" value="sun">Sun</label></li>
+				</ul>
+			</fieldset>
+			<fieldset class="group">
+				<h3>for these types of requests</h3>
+				<ul>
+					{foreach $types as $groupID=>$typesInThisgroup}
+						{foreach $typesInThisgroup as $type}
+							<li>
+								<label>
+									<input type="checkbox" name="types[]" value="{$type->getId()}">
+									{$type->getTitle()|escape}
+								</label>
+							</li>
+						{/foreach}
+					{/foreach}
+				</ul>
+			</fieldset>
+			<div class="actions">
+				<input type="submit" value="Save Changes">
+				<a href="/mySchedule.php">Cancel</a>
+			</div>
+		</form>
+	</div>
+
+</div>
+
+<script src="/js/mySchedule.js"></script>
+
+{/block}
+
+
+

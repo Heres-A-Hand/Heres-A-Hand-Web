@@ -1,0 +1,22 @@
+Hello {$member->getDisplayName()},
+
+There is some news from {$supportGroupNewsArticle->getCreatedByDisplayName()}.
+
+Group:
+{$supportGroup->getTitle()}
+
+News:
+{$supportGroupNewsArticle->getSummary()}
+{$supportGroupNewsArticle->getBody()}
+
+They are using Here's A Hand to send this. To create your free account and reply 
+to this please visit:
+https://{$httpsHost}/confirmEmail.php?id={$email->getId()}&c={$email->getConfirmCode()}
+
+If you'd prefer not to receive any future messages, please visit:
+https://{$httpsHost}/stopUserEmailSendBeforeConf.php?id={$email->getId()}&c={$email->getStopSendBeforeConfirmationCode()}
+
+Thanks,
+Here's a Hand.
+
+

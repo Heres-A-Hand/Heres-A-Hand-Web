@@ -1,0 +1,71 @@
+{*
+Copyright 2011-2013 Here's A Hand Limited
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+
+You may obtain a copy of the License at
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*}
+
+
+{extends file="page.htm"}
+
+
+{block name="content"}
+
+
+
+	{foreach $supportGroups as $sg}
+		{if $sg->isUserSettingUp($userAccount)}
+			<p>You have been invited to set up the group: {$sg->getTitle()|escape}</p>
+		{else}
+			<p>
+				<img src="{$sg->getAvatarURL()|escape}" class="avatar">
+				You have been invited to help the group: {$sg->getTitle()|escape}
+			</p>
+		{/if}
+		{if $sg->getDescription()}<p>{$sg->getDescription()|escape}</p>{/if}
+	{/foreach}
+
+<p>Create your account to get started!</p>
+
+{if isset($passwordError) && $passwordError}<p class="error">{$passwordError}</p>{/if}
+
+
+<form method="post" action="/confirmTelephone.php?">
+	<div>
+		<label for="name">Your Name</label>
+		<input type="text" name="name" id="name" value="{$displayName|escape}">
+	</div>
+	<div>
+		<label for="email">Your Email (Optional)</label>
+		<input type="email" name="email" id="email" value="{$email|escape}">
+	</div>
+	<div>
+		<label for="password1">Create a Password</label>
+		<input type="password" name="password1" id="password1" value="">
+	</div>
+	<div>
+		<label for="password2">Repeat Password</label>
+		<input type="password" name="password2" id="password2" value="">
+	</div>
+	<div>
+		<label>
+			<input type="checkbox" name="tandc" value="yes">
+			I agree to the <a href="/terms.php" target="_blank">Terms and Conditions</a>
+			{if isset($tandcError) && $tandcError}<p class="error">You must agree!</p>{/if}
+		</label>
+	</div>
+	<input type="submit" value="Create account">
+</form>
+
+
+
+{/block}

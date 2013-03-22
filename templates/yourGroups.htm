@@ -1,0 +1,73 @@
+{*
+Copyright 2011-2013 Here's A Hand Limited
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+
+You may obtain a copy of the License at
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*}
+
+{extends file="page.htm"}
+
+
+
+
+
+{block name="navButtons"}
+				<a href="/myHolidays.php" class="button">Setup a holiday now</a>
+				<a href="/mySchedule.php" class="button">Update your schedule</a>
+	
+{/block}
+
+{block name="content"}	
+
+		
+<div class="leftCol block">
+
+	<h2>Create a new group</h2>
+
+	<form action="/actions/newSupportGroup.php" method="post">
+		<input type="hidden" name="CSFRToken" value="{$CSFRToken}">
+
+		<div class="input">
+			<label for="Title">Title of your group</label>
+			<input type="text" value="" name="title" id="Title" class="textfield">
+		</div>
+
+		<div class="input">
+			<p>At the moment, only people with the password can create premium groups. If you don't know it you can still create a basic group!</p>
+			<label for="Password">Password</label>
+			<input type="password" value="" name="password" id="Password" class="textfield">
+		</div>
+
+		<div class="buttons">
+			<input type="submit" value="Create new group!" class="submit">
+		</div>
+
+	</form>
+</div>
+
+<div class="rightCol block">
+	<div class="popoutBox">
+		<h2>Your Current Groups</h2>
+		<ul class="groups clearfix">
+			{foreach $supportGroups as $sg}
+				<li>
+					<img src="{$sg->getAvatarURL()|escape}" class="avatar">
+					<h3><a href="/?supportGroup={$sg->getId()}">{$sg->getTitle()|escape}</a></h3>
+					{if $sg->getDescription()}<p>{$sg->getDescription()|escape}</p>{/if}
+				</li>
+			{/foreach}
+		</ul>
+	</div>
+</div>
+
+{/block}
+

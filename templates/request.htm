@@ -1,0 +1,164 @@
+{*
+Copyright 2011-2013 Here's A Hand Limited
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+
+You may obtain a copy of the License at
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*}
+
+{extends file="page.htm"}
+
+
+{block name="navButtons"}
+
+				<a href="/myHolidays.php" class="button">Setup a holiday now</a>
+				<a href="/mySchedule.php" class="button">Update your schedule</a>
+
+{/block}
+
+{block name="content"}
+
+	{if $requestResponsePosted}
+		<div id="ok">
+			<div id="flashOK">
+				Your response has been posted.<br>Do you want to
+				<form action="/actions/closeRequest.php?id={$request->getId()}" method="post" class="smallsubmit">
+					<input type="hidden" name="CSFRToken" value="{$CSFRToken}">
+					<input type="submit" value="Mark this as done">
+				</form>
+				or
+				<form action="/actions/cancelRequest.php?id={$request->getId()}" method="post" class="smallsubmit">
+					<input type="hidden" name="CSFRToken" value="{$CSFRToken}">
+					<input type="submit" value="Cancel this request">
+				</form>
+				?
+			</div>
+		</div>
+	{/if}
+
+<div class="requests">
+
+	<div class="requestWrapper ">
+		<div class="requestWrapperInner {if $request->isOpen()}requestWrapperInnerOpen{else}requestWrapperInnerNotOpen{/if} clearfix">
+			<img src="{$request->getCreatedByAvatarURL()}" class="avatar">
+			<div class="request">
+
+				{if $request->isClosed()}
+					<div class="status statusClosed"><span>Closed</span></div>
+				{else if $request->isOpen()}
+					<div class="status">
+						<form action="/actions/closeRequest.php?id={$request->getId()}" method="post">
+							<input type="hidden" name="CSFRToken" value="{$CSFRToken}">
+							<input type="submit" value="Mark this as done"  class="done">
+						</form>
+					</div>
+					<div class="status">
+						<form action="/actions/cancelRequest.php?id={$request->getId()}" method="post">
+							<input type="hidden" name="CSFRToken" value="{$CSFRToken}">
+							<input type="submit" value="Cancel this request"  class="cancel">
+						</form>
+					</div>
+				{else}
+					<div class="status statusCancelled"><span>Cancelled</span></div>
+				{/if}
+
+				<h3>{$request->getSummary()|escape|nl2br}</h3>
+				<div class="details">
+					{$request->getAgeFromOpenedInSeconds()|seconds_to_words} ago ago by {$request->getCreatedByDisplayName()|escape}					
+				</div>
+
+				{if $request->getRequest()}<div class="message">{$request->getRequest()|escape|nl2br}</div>{/if}
+
+				<div class="calendar">
+					{if $request->isOnCalendar()}
+						<a href="/calendar.php?supportGroup={$supportGroup->getId()}&d={$request->getStartAtInSeconds()|date_format:"%e"}&m={$request->getStartAtInSeconds()|date_format:"%m"}&y={$request->getStartAtInSeconds()|date_format:"%Y"}"><img src="/theme.{$theme}/images/calendar.png" alt="Calendar"></a>
+						From {$request->getStartAtInSeconds()|date_format:"%A, %B %e, %Y %I:%M%P"} to {$request->getEndAtInSeconds()|date_format:"%A, %B %e, %Y %I:%M%P"}.
+						<a href="/calendar.php?supportGroup={$supportGroup->getId()}&d={$request->getStartAtInSeconds()|date_format:"%e"}&m={$request->getStartAtInSeconds()|date_format:"%m"}&y={$request->getStartAtInSeconds()|date_format:"%Y"}">View on Calendar</a>
+					{else if $request->isOpen() && $request->getCreatedByUserId() == $currentUser->getId()}
+						{* if they don't have JS they can't use jqueryui anyway so it will just be hidden for them *}
+						<form action="/actions/addCalendarToRequest.php?id={$request->getId()}" method="post" id="CalendarForm" style="display: none;">
+							{include file="calendarEntryInputs.htm"}
+							<input type="submit" value="Add this to the calendar">
+						</form>
+						<form onsubmit="$('#CalendarFormLink').hide();$('#CalendarForm').show();return false;"  id="CalendarFormLink"  style="display: none;">
+							<input type="submit" value="Add this to calendar">
+						</form>
+						<script>
+							$(document).ready(function(){
+								$('#CalendarFormLink').show();
+							});
+						</script>
+					{/if}
+				</div>
+								
+				{assign "requestTypes" $request->getTypes()}
+				{if $requestTypes}
+					<ul class="category clearfix">
+						{foreach $requestTypes as $type}
+							<li>{$type->getTitle()|escape}</li>
+						{/foreach}
+					</ul>
+				{/if}
+
+				<ul class="responses">
+					{foreach $request->getResponses() as $response}
+						<li class="clearfix">
+							<img src="{$response->getAvatarURL()}" class="avatar">
+							<span>
+								<div class="message">{$response->getResponse()|escape|nl2br}</div>
+								<div class="details">{$response->getAgeInSeconds()|seconds_to_words} ago by {$response->getDisplayName()|escape}</div>
+							</span>
+						</li>
+					{/foreach}
+					{if $request->isOpen()}
+						<li>
+							<img src="{$currentUser->getAvatarURL()}" class="avatar">
+							<a name="ReplyForm">{* This is so links in notification emails can just straight here *}
+								<span>
+								<form action="/actions/respondToRequest.php?id={$request->getId()}" method="post" class="requestResponse">
+									<input type="hidden" name="CSFRToken" value="{$CSFRToken}">
+									<textarea name="response"></textarea>
+									<div class="submit clearfix">
+										<input class="submit" type="submit" value="Send Response">
+									</div>
+								</form>
+								</span>
+							</a>
+						</li>
+					{else if $request->isClosed()}
+						<li>
+							<div class="details">Closed {$request->getAgeFromClosedInSeconds()|seconds_to_words} ago by {$request->getClosedByDisplayName()|escape}.</div>
+						</li>
+					{else if $request->isCancelled()}
+						<li>
+							<div class="details">Closed {$request->getAgeFromCancelledInSeconds()|seconds_to_words} ago by {$request->getCancelledByDisplayName()|escape}.</div>
+						</li>
+					{/if}
+
+				</ul>
+			
+				{if $request->isClosed()}
+					<div class="info">This request has been closed, which means you can't reply.</div>
+				{else if $request->isCancelled()}
+					<div class="info">This request has been cancelled, which means you can't reply.</div>
+				{/if}
+
+			</div>
+			
+		</div>
+	</div>
+</div>
+
+<script src="/js/request.js" type="text/javascript"></script>
+
+{/block}
+
+

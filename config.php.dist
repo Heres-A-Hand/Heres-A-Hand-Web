@@ -1,0 +1,72 @@
+<?php
+/**
+ *  Copyright 2011-2013 Here's A Hand Limited
+ *
+ *   Licensed under the Apache License, Version 2.0 (the "License");
+ *   you may not use this file except in compliance with the License.
+ *   You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *   Unless required by applicable law or agreed to in writing, software
+ *   distributed under the License is distributed on an "AS IS" BASIS,
+ *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *   See the License for the specific language governing permissions and
+ *   limitations under the License.
+ * 
+ * @copyright 2011-2013 Here's A Hand Limited
+ * @license Apache License, Version 2.0
+**/
+
+define('DB_DSN','pgsql:dbname=xxxxx;host=xxxxx');
+define('DB_USERNAME','xxxxx');
+define('DB_PASSWORD','xxxxx');
+
+define('SYS_ADMIN_PASSWORD','abcd');
+
+define('EMAILS_FROM','test@example.com');
+
+define('HTTP_HOST','localhost:20115');
+define('HTTPS_HOST','localhost:40225');
+
+//define('BEANSTALKD_HOST','127.0.0.1');
+//define('BEANSTALKD_PORT','11300');
+//define('BEANSTALKD_QUE','sicamp');
+
+//define('TWILIO_ID', 'xxx');
+//define('TWILIO_TOKEN', 'xxx');
+//define('TWILIO_NUMBER', 'xxx');
+
+
+//define('TWITTER_APP_KEY','xxxxx');
+//define('TWITTER_APP_SECRET','xxxxxxxx');
+//define('TWITTER_USER_KEY','xxx-xxx');
+//define('TWITTER_USER_SECRET','xxxx');
+
+/**
+ * For rsyslog (Standard Ubuntu syslogger), you probably want a file /etc/rsyslog.d/30-heresahand.conf with:
+ * local7.*   <TAB>     -/var/log/heresahand/log
+ * & ~
+ * (The 2nd line stops it being logged anywhere else)
+ *
+ * For syslog-ng (Standard Debian Syslog), edit /etc/syslog-ng/syslog-ng.conf
+ * destination d_heresahand { file("/var/log/heresahand/log"); };
+ * filter f_heresahand { facility(local7); };
+ * log { source(s_src); filter(f_heresahand); destination(d_heresahand); };
+ * (haven't worked out how to stop it logging in messages as well yet.)
+ */
+//define('LOG_TO_FACILITY',LOG_LOCAL7);
+//define('LOG_TO_IDENT','HeresAHand');
+
+define('EMAIL_IN','app@heresahandorg.uk');
+//define('MAIL_USERNAME','eee');
+//define('MAIL_PASSWORD','eeee');
+//define('MAIL_SERVER','{imap.gmail.com:993/imap/ssl}INBOX');
+
+define('FORGOTTEN_PASSWORD_CODE_LASTS_FOR',24*60*60*30);
+
+define('RECAPTCHA_PUBLIC_KEY','');
+define('RECAPTCHA_PRIVATE_KEY','');
+
+define('THEME','default');
+

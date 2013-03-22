@@ -1,0 +1,63 @@
+{*
+Copyright 2011-2013 Here's A Hand Limited
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+
+You may obtain a copy of the License at
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*}
+
+
+<div class="holiday">
+	<form action="{if isset($holiday) && $holiday}/actions/editHoliday.php?id={$holiday->getId()}{else}/actions/newHoliday.php{/if}" method="post">
+		{if isset($holiday) && $holiday}<input type="hidden" name="id" value="{$holiday->getId()}">{else}<input type="hidden" name="new" value="yes">{/if}
+		<span class="ruleType">I'm on holiday from</span>
+		<span>
+			<input type="text" name="from_date" value="{if $holiday}{$holiday->getFromDate()}{/if}"  class="calendarEntry">
+			<select name="from_hour">
+				{for $i = 0 to 23}
+					<option value="{$i}" {if $holiday && $i == $holiday->getFromHour()}selected{/if}>
+						{if $i == 0}Midnight{else if $i < 12}{$i}am{else if $i == 12}noon{else}{$i-12}pm{/if}
+					</option>
+				{/for}
+			</select>
+			<input  type="hidden" name="from_mins" value="00" />
+		</span>
+		<span>to</span>
+		<span>
+			<input type="text" name="to_date" value="{if $holiday}{$holiday->getToDate()}{/if}" class="calendarEntry">
+			<select name="to_hour">
+				{for $i = 0 to 23}
+					<option value="{$i}" {if $holiday && $i == $holiday->getToHour()}selected{/if}>
+						{if $i == 0}Midnight{else if $i < 12}{$i}am{else if $i == 12}noon{else}{$i-12}pm{/if}
+					</option>
+				{/for}
+			</select>
+			<input  type="hidden" name="to_mins" value="00" />
+		</span>
+		<span>
+			<label>
+				<input type="checkbox" name="shareWithGroup" value="yes" {if $holiday && $holiday->getShareWithGroup()}checked="checked"{/if}>
+				Share With Group
+			</label>
+		</span>
+		<span>
+			<input type="submit" value="{if isset($holiday) && $holiday}Save Changes{else}Create New{/if}">
+		</span>
+	</form>
+	{if isset($holiday) && $holiday}
+		<form action="/actions/deleteHoliday.php" method="post" onsubmit="return confirm('Are you sure?');">
+			<input type="hidden" name="id" value="{$holiday->getId()}">
+			<input type="submit" value="Delete">
+		</form>
+	{else}
+		<td>&nbsp;</td>
+	{/if}
+</div>

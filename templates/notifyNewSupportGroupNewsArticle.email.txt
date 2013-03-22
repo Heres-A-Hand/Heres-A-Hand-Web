@@ -1,0 +1,18 @@
+Hello {$member->getDisplayName()},
+
+There is some news from {$supportGroupNewsArticle->getCreatedByDisplayName()}.
+
+Group:
+{$supportGroup->getTitle()}
+
+News:
+{$supportGroupNewsArticle->getSummary()}
+{$supportGroupNewsArticle->getBody()}
+
+To reply, reply to this email directly or visit:
+https://{$httpsHost}/supportGroupNewsArticle.php?id={$supportGroupNewsArticle->getId()}#ReplyForm
+
+Thanks,
+Here's a Hand.
+
+

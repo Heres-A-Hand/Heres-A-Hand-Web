@@ -1,0 +1,148 @@
+{*
+Copyright 2011-2013 Here's A Hand Limited
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+
+You may obtain a copy of the License at
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*}
+
+<!DOCTYPE html>
+<meta charset="UTF-8">
+
+<html>
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=8" />
+		<meta http-equiv="Content-type" content="text/html; charset=UTF-8" />
+		<title>{$PAGETITLE} Here's a hand</title>
+		<link rel="stylesheet" href="/theme.{$theme}/css/reset.css" type="text/css" />
+		<link rel="stylesheet" href="/theme.{$theme}/css/main.css" type="text/css" />
+		<link rel="stylesheet" href="/jqueryui/css/ui-lightness/jquery-ui-1.8.18.custom.css" type="text/css" />
+		<link rel="stylesheet" href="/theme.{$theme}/css/1col.css" type="text/css" media="screen and (max-device-width: 600px)"  />
+		<link rel="stylesheet" href="/theme.{$theme}/css/mediaqueries.css" type="text/css" media="screen and (max-device-width: 600px)"  />
+<!--[if lte IE 6]><link rel="stylesheet" href="/css/ie6.css" type="text/css" /><![endif]-->
+<!--[if lte IE 7]><link rel="stylesheet" href="/css/ie7.css" type="text/css" /><![endif]-->
+<!--[if lte IE 9]><link rel="stylesheet" href="/css/ie.css" type="text/css" /><![endif]-->
+
+<!--[if IE]>
+<style type="text/css">
+  .clearfix {
+    zoom: 1;     /* triggers hasLayout */
+    }  /* Only IE can see inside the conditional comment
+    and read this CSS rule. Don't ever use a normal HTML
+    comment inside the CC or it will close prematurely. */
+</style>
+<![endif]-->
+
+		<link href='http://fonts.googleapis.com/css?family=Ubuntu:300,400,500,700,300italic,400italic,500italic,700italic' rel='stylesheet' type='text/css'>
+		{if isset($CANONICALURL) && $CANONICALURL}
+			<link rel="canonical" href="http://{$httpHost}{$CANONICALURL}" />
+		{else}
+			<meta name="robots" content="noindex, nofollow" />
+		{/if}
+		<link rel="icon" type="image/png" href="/theme.{$theme}/images/favicon.png" />
+
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"  type="text/javascript"></script>
+		
+		{block name="inHead"}{/block}
+
+	</head>
+	<body>
+		<div id="pagewrapper">
+			<div id="header">
+				<a href="/"><img src="/theme.{$theme}/images/logo-small.png" alt="Heres a hand"></a>
+				<ul id="mainmenu">
+					{if $currentUser && $supportGroup}
+						{* DUPLICATED BELOW *}
+						<li class="{if $smarty.server.PHP_SELF == '/index.php'}current{/if}">
+							<a href="/?supportGroup={$supportGroup->getId()}">
+								Home
+								{$c = $supportGroup->getOpenRequestsVisibleToUserCount($currentUser)}
+								{if $c > 0}<span class="messagesCount">{$c}</span>{/if}
+							</a>
+
+						</li>
+						<li class="{if $smarty.server.PHP_SELF == '/supportGroupNewsArticles.php'}current{/if}"><a href="/supportGroupNewsArticles.php?supportGroup={$supportGroup->getId()}">News</a></li>
+						<li class="{if $smarty.server.PHP_SELF == '/calendar.php'}current{/if}"><a href="/calendar.php?supportGroup={$supportGroup->getId()}">Calendar</a></li>
+						<li class="{if $smarty.server.PHP_SELF == '/team.php'}current{/if}"><a href="/team.php?supportGroup={$supportGroup->getId()}">Group</a></li>
+						{if $supportGroup->isAdmin()}
+							<li class="{if $smarty.server.PHP_SELF == '/groupAdmin.php'}current{/if}"><a href="/groupAdmin.php?supportGroup={$supportGroup->getId()}">Manage</a></li>
+						{/if}
+					{else}
+						<li class="{if $smarty.server.PHP_SELF == '/index.php'}current{/if}">
+							<a href="/">Home</a>
+						</li>
+						<li class="{if $smarty.server.PHP_SELF == '/howItWorks.php'}current{/if}">
+							<a href="/howItWorks.php">How it works</a>
+						</li>
+						<li class="{if $smarty.server.PHP_SELF == '/startAGroup.php'}current{/if}">
+							<a href="/startAGroup.php">Start a group</a>
+						</li>
+						<li>
+							<a href="http://blog.heresahand.org.uk/" target="_blank">News</a>
+						</li>
+						<li class="{if $smarty.server.PHP_SELF == '/about.php'}current{/if}">
+							<a href="/about.php">About</a>
+						</li>
+					{/if}
+				</ul><!-- end main menu -->
+				<ul id="topmenu">
+					{if $currentUser}
+						<li class="{if $smarty.server.PHP_SELF == '/yourGroups.php'}current{/if}"><a href="/yourGroups.php">Your Groups</a></li>
+						<li class="{if $smarty.server.PHP_SELF == '/yourAccount.php' or  $smarty.server.PHP_SELF == '/myCommunicationMethods.php' or  $smarty.server.PHP_SELF == '/mySchedule.php'}current{/if}"><a href="/yourAccount.php">Your Account</a></li>
+						<li><a href="/logout.php">Log Out</a></li>
+					{else}
+						<li class="{if $smarty.server.PHP_SELF == '/login.php'}current{/if}"><a href="https://{$httpsHost}/login.php">Log In</a></li>
+					{/if}
+				</ul><!-- end top menu -->
+			</div> <!-- end header -->
+
+			
+		<div id="content" class="clearfix">
+			<div id="groupheader">
+				<h1>{if $supportGroup}{$supportGroup->getTitle()|escape}<img src="{$supportGroup->getAvatarURL()|escape}" class="avatar">{/if}</h1>
+				{block name="navButtons"}{/block}
+				{if isset($helpPage) && $helpPage}
+					<a href="/help.php?p={$helpPage}" class="button">Help</a>
+				{/if}
+			</div>
+			<div id="error">
+				{if $flashError}<div id="flashError">{$flashError}</div>{/if}
+			</div>
+			<div id="ok">
+				{if $flashOK}<div id="flashOK">{$flashOK}</div>{/if}
+			</div>  
+			{block name="content"}{/block}
+		</div>  <!-- end content -->
+		<div id="footer">
+			<div class="socialNetworks">
+				<a href="https://twitter.com/heresahand" title="Follow us on Twitter"><img src="/theme.{$theme}/images/twitter-us.png" alt="Twitter"></a>
+				<a href="https://www.facebook.com/heresahand" title="Like us on Facebook"><img src="/theme.{$theme}/images/facebook-us.png" alt="Facebook"></a>
+				<a href="https://plus.google.com/112457232161436231765" title="Follow us on Google Plus"><img src="/theme.{$theme}/images/googleplus-us.png" alt="Google Plus"></a>
+			</div>
+			<div>
+				<p>&copy; Here's a hand 2011-2012</p> 
+				<ul> 
+				<li><a href="/howItWorks.php">How it works</a></li> 
+				<li><a href="/startAGroup.php">Start a group</a></li> 
+				<li><a href="/faq.php">Frequently Asked Questions</a></li> 
+				<li><a href="http://blog.heresahand.org.uk">News</a></li> 
+				<li><a href="/contact.php">Contact us</a></li>
+				<li><a href="/about.php">About</a></li> 
+				<li><a href="/sitemap.php">Site map</a> </li>
+				<li><a href="/accessibility.php">Accessibility</a></li>
+				<li><a href="/terms.php">Terms & conditions</a></li>
+				</ul> 				
+			</div>
+		</div> <!-- end footer -->
+		</div> <!-- end page wrapper -->
+		<script src="/jqueryui/js/jquery-ui-1.8.18.custom.min.js"></script>
+	</body>
+</html>
