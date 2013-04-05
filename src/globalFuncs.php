@@ -87,6 +87,18 @@ function getEmailSmarty() {
 	return $s;
 }
 
+function getSwiftMailer() {
+	require_once dirname(__FILE__).'/../libs/swiftmailer/swift_required.php';
+	$transport = Swift_MailTransport::newInstance();
+	$mailer = Swift_Mailer::newInstance($transport);
+	return array($mailer,  getSwiftMessage());
+}
+
+function getSwiftMessage() {
+	return Swift_Message::newInstance()
+			->setFrom(array(EMAILS_FROM_EMAIL => EMAILS_FROM_NAME));
+}
+
 /** @return Pheanstalk **/
 function getPheanstalk() {
 	if (defined('BEANSTALKD_HOST')) {

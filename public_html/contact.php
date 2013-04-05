@@ -32,7 +32,7 @@ if ($CURRENT_USER) {
 }
 
 if ($_POST && isset($_POST['email'])  && isset($_POST['message']) ) {
-	// we could check the CSFR token here but seeing as onyone can send this form in we don't care right now
+	// we could check the CSFR token here but seeing as anyone can send this form in we don't care right now
 	$tpl = getEmailSmarty();
 	$tpl->assign('email',$_POST['email']);
 	$tpl->assign('message',$_POST['message']);
@@ -42,7 +42,13 @@ if ($_POST && isset($_POST['email'])  && isset($_POST['message']) ) {
 	$body = $tpl->fetch('contactform.email.txt');
 	//print $body;
 
-	mail("james@heresahand.org.uk, catherine@heresahand.org.uk", "Contact Form", $body, "From: ".EMAILS_FROM);
+	list($mailer, $message) = getSwiftMailer();
+	$message
+		->setSubject('Contact Form')
+		->setTo(array('james@heresahand.org.uk', 'catherine@heresahand.org.uk'))
+		->setBody($body);
+	$mailer->send($message);
+
 	$s->assign('flashOK','Your message has been sent');	
 }
 
