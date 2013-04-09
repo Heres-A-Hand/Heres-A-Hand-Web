@@ -355,8 +355,9 @@ class SupportGroup {
 		try {
 			$db->beginTransaction();
 
-			$stat = $db->prepare("INSERT INTO request (summary,request,support_group_id,created_at,created_by_user_id) ".
-					"VALUES (:summary, :request,:support_group_id,:created_at,:created_by_user_id) RETURNING id");
+			$stat = $db->prepare("INSERT INTO request (summary,request,support_group_id,created_at,created_by_user_id,from_saved_request_id) ".
+					"VALUES (:summary, :request,:support_group_id,:created_at,:created_by_user_id,:from_saved_request_id) RETURNING id");
+			$stat->bindValue('from_saved_request_id', $savedRequest->getId());
 			$stat->bindValue('request', $savedRequest->getRequest());
 			$stat->bindValue('summary', substr($savedRequest->getSummary(),0,140));
 			$stat->bindValue('support_group_id', $this->id);

@@ -1,4 +1,3 @@
-DROP TABLE IF EXISTS saved_request;
 DROP TABLE IF EXISTS support_group_news_article_response_sent_to_user_email;
 DROP TABLE IF EXISTS support_group_news_article_response;
 DROP TABLE IF EXISTS support_group_news_article_sent_to_user_email;
@@ -23,6 +22,7 @@ DROP TABLE IF EXISTS request_has_type;
 DROP TABLE IF EXISTS request;
 DROP TABLE IF EXISTS request_type;
 DROP TABLE IF EXISTS user_in_group;
+DROP TABLE IF EXISTS saved_request;
 DROP TABLE IF EXISTS support_group;
 DROP TABLE IF EXISTS user_admins_white_label;
 DROP TABLE IF EXISTS white_label;
