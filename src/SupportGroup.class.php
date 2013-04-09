@@ -344,6 +344,42 @@ class SupportGroup {
 		return $id;
 	}
 	
+	public function newRequestFromSavedRequest(SavedRequest $savedRequest, UserAccount $user) {
+		// TODO duplicate posting detection!
+		if (is_null($this->id)) throw new Exception ('No Support Group Loaded');
+		// we are not always loaded with permissions! Only when loaded from users
+		if (!is_null($this->can_make_requests) && !$this->canMakeRequests()) throw new Exception ('No Permissions');
+
+		$db = getDB();
+		$ps = getPheanstalk();
+		try {
+			$db->beginTransaction();
+
+			$stat = $db->prepare("INSERT INTO request (summary,request,support_group_id,created_at,created_by_user_id) ".
+					"VALUES (:summary, :request,:support_group_id,:created_at,:created_by_user_id) RETURNING id");
+			$stat->bindValue('request', $savedRequest->getRequest());
+			$stat->bindValue('summary', substr($savedRequest->getSummary(),0,140));
+			$stat->bindValue('support_group_id', $this->id);
+			$stat->bindValue('created_at', date("Y-m-d H:i:s", getCurrentTime()));
+			$stat->bindValue('created_by_user_id', $user->getId());
+			$stat->execute();
+			$d = $stat->fetch();
+			$id = $d['id'];
+
+			$stat = $db->prepare("UPDATE request SET to_all_members=TRUE WHERE id=:id");
+			$stat->execute(array('id'=>$id));
+			
+			$db->commit();			
+		} catch (Exception $e) {
+			$db->rollBack();
+			throw $e;
+		}
+
+		logInfo("In SupportGroup:".$this->id." new Request:".$id." from SavedRequest:".$savedRequest->getId());
+		if ($ps) $ps->useTube(BEANSTALKD_QUE)->put(json_encode(array("type"=>"NewRequest","requestID"=>$id)),1000,5);
+		return $id;
+	}
+	
 	
 	public function newSavedRequest(UserAccount $user, $summary, $message) {
 		// TODO duplicate posting detection!

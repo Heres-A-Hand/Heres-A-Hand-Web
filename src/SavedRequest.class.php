@@ -40,6 +40,18 @@ class SavedRequest {
 	}
 
 
+	/** @return SavedRequest **/
+	public static function findByIDWithinSupportGroupForUser($id, SupportGroup $group, UserAccount $user) {
+		$db = getDB();
+		$s = $db->prepare("SELECT saved_request.* FROM saved_request ".
+				"WHERE saved_request.id = :id AND saved_request.support_group_id = :sid  AND saved_request.created_by_user_id = :uid");
+		$s->execute(array('id'=>$id,'sid'=>$group->getId(),'uid'=>$user->getId()));
+		if ($s->rowCount() == 1) {
+			return new SavedRequest($s->fetch());
+		}
+	}
+
+	
 	
 	public function getId  () { return $this->id; }
 	public function getRequest  () { return $this->request; }

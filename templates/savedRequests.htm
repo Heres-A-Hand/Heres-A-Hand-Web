@@ -66,6 +66,14 @@ limitations under the License.
 
 								{if $request->getRequest()}<div class="message">{$request->getRequest()|escape|nl2br}</div>{/if}
 
+								<form action="/actions/newRequestFromSavedRequest.php?supportGroup={$supportGroup->getId()}" method="post" class="sendRequestNow">
+									<input type="hidden" name="CSFRToken" value="{$CSFRToken}">
+									<input type="hidden" name="savedRequestID" value="{$request->getId()}">
+									<div class="submit clearfix">
+										<input type="submit" class="submit" value="Send this Request now">
+									</div>
+								</form>
+				
 							</div>
 						</div>
 					</div>

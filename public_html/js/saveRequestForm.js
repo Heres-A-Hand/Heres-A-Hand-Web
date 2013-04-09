@@ -43,6 +43,10 @@ $(document).ready(function(){
 	
 
 	SubjectToLongWarning = $('#SubjectToLongWarning');
+	
+	$('form.sendRequestNow').submit(function() {
+		return confirm("Are you sure you want to send this request now?");
+	});
 });
 
 function newRequestSummaryChanged() {
