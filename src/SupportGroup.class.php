@@ -344,6 +344,39 @@ class SupportGroup {
 		return $id;
 	}
 	
+	
+	public function newSavedRequest(UserAccount $user, $summary, $message) {
+		// TODO duplicate posting detection!
+		if (is_null($this->id)) throw new Exception ('No Support Group Loaded');
+		// we are not always loaded with permissions! Only when loaded from users
+		if (!is_null($this->can_make_requests) && !$this->canMakeRequests()) throw new Exception ('No Permissions');
+
+		$db = getDB();
+		try {
+			$db->beginTransaction();
+
+			$stat = $db->prepare("INSERT INTO saved_request (summary,request,support_group_id,created_at,created_by_user_id,updated_at,updated_by_user_id) ".
+					"VALUES (:summary, :request,:support_group_id,:created_at,:created_by_user_id,:created_at,:created_by_user_id) RETURNING id");
+			$stat->bindValue('request', $message);
+			$stat->bindValue('summary', substr($summary,0,140));
+			$stat->bindValue('support_group_id', $this->id);
+			$stat->bindValue('created_at', date("Y-m-d H:i:s", getCurrentTime()));
+			$stat->bindValue('created_by_user_id', $user->getId());
+			$stat->execute();
+			$d = $stat->fetch();
+			$id = $d['id'];
+
+			$db->commit();			
+		} catch (Exception $e) {
+			$db->rollBack();
+			throw $e;
+		}
+
+		logInfo("In SupportGroup:".$this->id." new SavedRequest:".$id);
+		return $id;
+	}
+	
+	
 	public function newNewsArticle(UserAccount $user, $summary, $body) {
 		// TODO duplicate posting detection!
 		if (is_null($this->id)) throw new Exception ('No Support Group Loaded');

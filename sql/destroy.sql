@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS saved_request;
 DROP TABLE IF EXISTS support_group_news_article_response_sent_to_user_email;
 DROP TABLE IF EXISTS support_group_news_article_response;
 DROP TABLE IF EXISTS support_group_news_article_sent_to_user_email;
@@ -33,3 +34,4 @@ DROP TABLE IF EXISTS user_twitter;
 DROP TABLE IF EXISTS user_email;
 DROP TABLE IF EXISTS user_account ;
 DROP TABLE IF EXISTS migration;
+

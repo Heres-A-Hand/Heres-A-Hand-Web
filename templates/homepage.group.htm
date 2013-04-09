@@ -19,6 +19,9 @@ limitations under the License.
 {block name="navButtons"}
 				<a href="/myHolidays.php" class="button">Setup a holiday now</a>
 				<a href="/mySchedule.php" class="button">Update your schedule</a>
+				{if $supportGroup->canMakeRequests()}
+					<a href="/savedRequests.php?supportGroup={$supportGroup->getId()}" class="button">Setup Saved Requests</a>
+				{/if}
 {/block}
 
 {block name="content"}

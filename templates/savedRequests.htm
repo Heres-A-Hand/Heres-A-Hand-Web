@@ -1,0 +1,56 @@
+{*
+Copyright 2011-2013 Here's A Hand Limited
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+
+You may obtain a copy of the License at
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*}
+
+{extends file="page.htm"}
+
+
+
+{block name="content"}
+
+
+	<div class="leftCol block">
+		<div class="sendMessageWrapper">
+			<h2>Save a request for you to use with one click later</h2>
+			<form class="sendMessage" action="/actions/newSavedRequest.php?supportGroup={$supportGroup->getId()}" method="post" id="SendMessageForm">
+				<input type="hidden" name="CSFRToken" value="{$CSFRToken}">
+				<div id="SubjectToLongWarning" style="display: none;">
+					You have used to many characters - please remove some! 
+					If you need to <a href="#" id="SendMessageDetailsLink2">add more details please click here</a>.
+				</div>
+				<div class="subject"><input id="SendMessageText" name="newMessageSummary" placeholder="Enter request ..."><span id="SendMessageTextLength"></span></div>
+
+				<div id="SendMessageExtras" class="clearfix">
+					<div id="SendMessageDetails">
+						<h3>Include more detail <span>{if $supportGroup->isPremium()}(This won't be included in SMS Messages.){/if}</span></h3>
+						<textarea name="newMessageRequest"></textarea>
+					</div>
+					<div class="advanced clearfix">
+						<a href="#" id="SendMessageDetailsLink" class="button">Add more details</a>
+					</div>
+					<div class="submit clearfix">
+						<input type="submit" class="submit" value="Save Request">
+					</div>
+				</div>			
+			</form>
+		</div>
+	</div>
+	
+	<div class="rightCol block">
+		
+	</div>
+
+	<script src="/js/saveRequestForm.js" type="text/javascript"></script>
+{/block}
