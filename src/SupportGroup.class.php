@@ -549,7 +549,7 @@ class SupportGroup {
 
 		$db = getDB();
 		$s = $db->prepare("SELECT saved_request.* FROM saved_request ".
-				"WHERE saved_request.created_by_user_id = :uid AND saved_request.support_group_id = :sgid ".
+				"WHERE saved_request.created_by_user_id = :uid AND saved_request.support_group_id = :sgid  AND saved_request.deleted_at IS NULL ".
 				"ORDER BY saved_request.created_at ASC LIMIT ".$limit);
 		$s->execute(array('uid'=>$user->getId(),'sgid'=>$this->id));
 		$out = array();

@@ -47,6 +47,9 @@ $(document).ready(function(){
 	$('form.sendRequestNow').submit(function() {
 		return confirm("Are you sure you want to send this request now?");
 	});
+	$('form.deleteRequest').submit(function() {
+		return confirm("Are you sure you want to delete this request?");
+	});
 });
 
 function newRequestSummaryChanged() {

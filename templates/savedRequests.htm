@@ -58,7 +58,6 @@ limitations under the License.
 						<div class="requestWrapperInner requestWrapperInnerOpen clearfix">
 							<div class="request clearfix">
 
-
 								<h3>{$request->getSummary()|escape|nl2br}</h3>
 								<div class="details">
 									{$request->getAgeFromOpenedInSeconds()|seconds_to_words} ago
@@ -71,6 +70,13 @@ limitations under the License.
 									<input type="hidden" name="savedRequestID" value="{$request->getId()}">
 									<div class="submit clearfix">
 										<input type="submit" class="submit" value="Send this Request now">
+									</div>
+								</form>
+								<form action="/actions/deleteSavedRequest.php?supportGroup={$supportGroup->getId()}" method="post" class="deleteRequest">
+									<input type="hidden" name="CSFRToken" value="{$CSFRToken}">
+									<input type="hidden" name="savedRequestID" value="{$request->getId()}">
+									<div class="submit clearfix">
+										<input type="submit" class="submit" value="Delete this">
 									</div>
 								</form>
 				

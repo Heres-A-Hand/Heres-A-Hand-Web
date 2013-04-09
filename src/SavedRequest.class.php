@@ -44,13 +44,20 @@ class SavedRequest {
 	public static function findByIDWithinSupportGroupForUser($id, SupportGroup $group, UserAccount $user) {
 		$db = getDB();
 		$s = $db->prepare("SELECT saved_request.* FROM saved_request ".
-				"WHERE saved_request.id = :id AND saved_request.support_group_id = :sid  AND saved_request.created_by_user_id = :uid");
+				"WHERE saved_request.id = :id AND saved_request.support_group_id = :sid  AND saved_request.created_by_user_id = :uid AND saved_request.deleted_at IS NULL");
 		$s->execute(array('id'=>$id,'sid'=>$group->getId(),'uid'=>$user->getId()));
 		if ($s->rowCount() == 1) {
 			return new SavedRequest($s->fetch());
 		}
 	}
 
+	
+	public function delete(UserAccount $user) {
+		if (!$this->id) throw new Exception ('No Saved Request Loaded');
+		$db = getDB();
+		$stat = $db->prepare("UPDATE saved_request SET deleted_at=:at, deleted_by_user_id=:uid WHERE id=:id");
+		$stat->execute(array('at'=>date("Y-m-d H:i:s", getCurrentTime()),'uid'=>$user->getId(), 'id'=>$this->id));
+	}
 	
 	
 	public function getId  () { return $this->id; }
