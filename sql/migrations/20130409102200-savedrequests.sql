@@ -9,3 +9,5 @@ CREATE TABLE saved_request (
   updated_by_user_id BIGINT NOT NULL,
   PRIMARY KEY(id)
  );
+ALTER TABLE saved_request ADD CONSTRAINT saved_request_created_by_user_id FOREIGN KEY (created_by_user_id) REFERENCES user_account(id);
+ALTER TABLE saved_request ADD CONSTRAINT saved_request_updated_by_user_id FOREIGN KEY (updated_by_user_id) REFERENCES user_account(id);
