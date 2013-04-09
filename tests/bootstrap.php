@@ -36,7 +36,7 @@ class AbstractTest extends PHPUnit_Framework_TestCase {
 	function setupDB() {
 		$db = getDB();
 		$db->exec(file_get_contents(dirname(__FILE__).'/../sql/destroy.sql'));
-		$db->exec(file_get_contents(dirname(__FILE__).'/../sql/create.sql'));
+		DBMigrationManager::upgrade(false);
 		return $db;
 	}
 

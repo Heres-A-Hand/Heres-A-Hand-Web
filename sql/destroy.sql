@@ -32,3 +32,4 @@ DROP TABLE IF EXISTS country;
 DROP TABLE IF EXISTS user_twitter; 
 DROP TABLE IF EXISTS user_email;
 DROP TABLE IF EXISTS user_account ;
+DROP TABLE IF EXISTS migration;
