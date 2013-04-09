@@ -25,6 +25,9 @@ define('DB_PASSWORD','xxxxx');
 define('SYS_ADMIN_PASSWORD','abcd');
 
 define('EMAILS_FROM','test@example.com');
+define('EMAILS_FROM_EMAIL','test@example.com');
+define('EMAILS_FROM_NAME','test');
+
 
 define('HTTP_HOST','localhost:20115');
 define('HTTPS_HOST','localhost:40225');
