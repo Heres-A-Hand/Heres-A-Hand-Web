@@ -506,6 +506,19 @@ class SupportGroup {
 		while($d = $s->fetch()) $out[] = new Request($d);
 		return $out;
 	}
+	
+	public function getSavedRequestsVisibleToUser(UserAccount $user, $limit=50) {
+		if (is_null($this->id)) throw new Exception ('No Support Group Loaded');
+
+		$db = getDB();
+		$s = $db->prepare("SELECT saved_request.* FROM saved_request ".
+				"WHERE saved_request.created_by_user_id = :uid AND saved_request.support_group_id = :sgid ".
+				"ORDER BY saved_request.created_at ASC LIMIT ".$limit);
+		$s->execute(array('uid'=>$user->getId(),'sgid'=>$this->id));
+		$out = array();
+		while($d = $s->fetch()) $out[] = new SavedRequest($d);
+		return $out;
+	}
 
 	public function getOpenRequestsVisibleToUserCount(UserAccount $user) {
 		if (is_null($this->id)) throw new Exception ('No Support Group Loaded');

@@ -46,6 +46,33 @@ limitations under the License.
 				</div>			
 			</form>
 		</div>
+
+		{assign "requests" $supportGroup->getSavedRequestsVisibleToUser($currentUser)}
+		{if $requests}
+
+			<h2>Saved requests</h2>
+
+			<div class="requestModule">
+				{foreach $requests as $request}
+					<div class="requestWrapper {if $request@index % 2 == 1}alternate{/if}">
+						<div class="requestWrapperInner requestWrapperInnerOpen clearfix">
+							<div class="request clearfix">
+
+
+								<h3>{$request->getSummary()|escape|nl2br}</h3>
+								<div class="details">
+									{$request->getAgeFromOpenedInSeconds()|seconds_to_words} ago
+								</div>
+
+								{if $request->getRequest()}<div class="message">{$request->getRequest()|escape|nl2br}</div>{/if}
+
+							</div>
+						</div>
+					</div>
+				{/foreach}
+			</div>
+		{/if}
+		
 	</div>
 	
 	<div class="rightCol block">
