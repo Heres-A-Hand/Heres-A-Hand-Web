@@ -1,0 +1,41 @@
+Here's A Hand
+=============
+
+Requirements:
+
+* PHP
+* PHP configured to send email
+* Web server with SSL (eg Apache)
+* Postgres Database
+* Beanstalkd Message Que
+* Twillio account for text messaging. incoming and outgoing
+* A Twitter App, and the keys for that
+* An IMAP email account to recieve email
+* Cron or scheduled tasks
+
+To install
+
+* Check out code from Git or Download
+
+* Copy config.php.dist to config.php and edit
+
+* Make the folder smarty_c/ writable by PHP
+The compiled templates will be saved here.
+
+* Run the PHP script tasks/upgradeDB.php to install the database tables
+
+* Set up webserver to serve contents of "public_html" folder
+
+* Configure Twillio to send all tweets "/smsIn.php"
+
+* Go to website and create a user account
+
+* Edit the table "user_account" by hand and set the column "system_admin" to true for your new user.
+
+* Set the "checkEmail.php" script in the "tasks" folder to run regularly - maybe every 15 mins?
+
+* Set the "workerQue.php" script in the "tasks" folder to run every hour.
+This script consumes tasks from the message que. It dies every hour. This can be adjusted in constants in the top of the script.
+
+
+
